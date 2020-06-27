@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="https://mdnmnahmed.github.io/portfolio/images/nlogo.jpg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="ToDo-App in NodeJS" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/index.css" />
+    <title>ToDo App EJS</title>
+    <style>
+        
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="container appContainer col-lg-3 col-md-8 col-sm-12 shadow" align="center">
+            <div class="secJumbotron shadow">
+                <form id="to-do-form">
+                    <input id="formInputBox" type="text" onfocus="this.value=''" class="shadow" placeholder="ToDos..." title="Enter ToDos" required name="todoItem" />
+                    <button class="shadow" type="submit"><span class="fa fa-plus"></span> Add</button>
+                </form>
+                <hr style="margin: -5px" />
+                <div style="margin: -5px">
+                    <% allTodos.forEach((todo) => { %>
+                        <div class="list">
+                            <p class="shadow hoverable">
+                                <%= todo.todo %>
+                                <span onclick="deleteTodo('<%= todo._id %>')" style="margin: 26px -4px"  key="<%= todo._id %>" class="deleteIcon fa fa-trash"></span>
+                            </p>
+                        </div>
+                    <% }) %>
+                </div>
+                <br />
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<script>
+
+        //POST Todo
+    
+    // const url = "http://localhost:5000/ejs/"; //For Development
+    
+    const url = "https://todo-task-mern.herokuapp.com/ejs/"; //For Production
+
+    document.getElementById('to-do-form').onsubmit = (e) => {
+        e.preventDefault();
+
+        var data = new URLSearchParams();
+        for(const pair of new FormData(e.target)){
+            data.append(pair[0], pair[1])
+        }
+
+        fetch(url, {
+            method: 'post',
+            body: data
+        }).then(res => res.json())
+        .then(res2 => {
+            location.reload()
+        });
+    }
+
+        // Delete Todo
+    function deleteTodo(todoID){
+        fetch(url+'remove/'+todoID, {
+            method: "delete"
+        }).then(res => res.json())
+        .then(res2 => {
+            location.reload()
+        });
+    }
+</script>
+
+
+</html>
